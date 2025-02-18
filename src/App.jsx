@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
+import Nav from './components/Nav';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
-import Navbar from 'react-bootstrap/Navbar';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -10,6 +10,20 @@ const PokeAPI = "https://pokeapi.co/api/v2/pokemon?limit=151";
 
 function App() {
   const [pokemons, setPokemons] = useState([]);
+  const [squad, setSquad] = useState([]);
+       
+  const handleSelect = (pokemon) => {
+    if (squad.some((p) => p.id === pokemon.id)) {
+      setSquad(squad.filter((p) => p.id !== pokemon.id)) 
+      } else if (squad.length < 6) {
+         setSquad([...squad, pokemon])
+      } else {
+        alert("You can only select up to Pokemon!")
+      }
+    }
+  
+  
+
 
   useEffect(() => {
     // Fetch list of Pokémon names (and URLs)
@@ -31,13 +45,8 @@ function App() {
 
   return (
     <>
-      <Navbar expand="lg" className="bg-secondary">
-        <Container>
-          <Navbar.Brand className="text-light fw-bold">Pokeverse | </Navbar.Brand>
-          <Navbar.Brand className="text-light text-start">All Pokemon</Navbar.Brand>
-        </Container>
-      </Navbar>
-
+      
+       <Nav/>
       <Container className="mt-4">
         <Row>
           {/* Loop through the `pokemons` array and create a card for each one */}
@@ -45,6 +54,12 @@ function App() {
             <Col key={pokemon.id} md={4} className="mb-4">
               <Card>
                 {/* Display Pokémon image */}
+                <button class="btn btn-success" 
+                style={{ position: "absolute", bottom: "20px", right: "30px"}}
+                /*onClick={() =>{alert("Pokemon added to your basket")}}*/>
+                  Add
+                  </button>
+
                 <Card.Img
                   variant="top"
                   src={pokemon.sprites.front_default}
