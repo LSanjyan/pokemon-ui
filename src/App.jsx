@@ -5,6 +5,7 @@ import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button'
 
 const PokeAPI = "https://pokeapi.co/api/v2/pokemon?limit=151";
 
@@ -21,10 +22,7 @@ function App() {
         alert("You can only select up to Pokemon!")
       }
     }
-  
-  
-
-
+    
   useEffect(() => {
     // Fetch list of Pokémon names (and URLs)
     fetch(PokeAPI)
@@ -45,7 +43,9 @@ function App() {
 
   return (
     <>
-      
+      <div>
+        <h1>Pokemons</h1>
+      </div>
        <Nav/>
       <Container className="mt-4">
         <Row>
@@ -53,28 +53,34 @@ function App() {
           {pokemons.map((pokemon) => (
             <Col key={pokemon.id} md={4} className="mb-4">
               <Card>
-                {/* Display Pokémon image */}
-                <button class="btn btn-success" 
-                style={{ position: "absolute", bottom: "20px", right: "30px"}}
-                /*onClick={() =>{alert("Pokemon added to your basket")}}*/>
-                  Add
-                  </button>
-
-                <Card.Img
-                  variant="top"
-                  src={pokemon.sprites.front_default}
-                  alt={pokemon.name}
-                />
+               <Card.Img
+               variant="top"
+               src={pokemon.sprites.front_default}
+               alt={pokemon.name}
+               />
                 <Card.Body>
                   {/* Display Pokémon name */}
                   <Card.Title>
                     {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
                   </Card.Title>
+                  <Button
+                  variant={squad.some((p) => p.id === pokemon.id) ? "danger" : "success"}
+                  onClick={() => handleSelect(pokemon)}
+                  style={{ position: "absolute", bottom: "20px", right: "30px"}}>
+                    {squad.some((p) => p.id === pokemon.id) ? "Remove" : "Add"}
+                  </Button>
                 </Card.Body>
-              </Card>
+                 </Card>
             </Col>
           ))}
         </Row>
+
+        {/* Battle Button*/}
+        <div className="text-center mt-4">
+          <Button variant="primary" disabled={squad.length < 2}>
+            Battle!
+          </Button>
+        </div>
       </Container>
     </>
   );
